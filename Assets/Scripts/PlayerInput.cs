@@ -1,14 +1,20 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))] [RequireComponent(typeof(Animator))] [RequireComponent(typeof(PlayerMove))]
+[RequireComponent(
+    typeof(SpriteRenderer), 
+    typeof(Animator), 
+    typeof(PlayerMove))]
+
 public class PlayerInput : MonoBehaviour
 {
-    private const float _walkSpeed = 2;
-    private const float _runSpeed = 4;
-    private float _speed = 0;
+    private const float WalkSpeed = 2;
+    private const float RunSpeed = 4;
+    
+    private static readonly int Speed = Animator.StringToHash(PlayerAnimator.Params.Speed);
+    private static readonly int JumpState = Animator.StringToHash(PlayerAnimator.States.Jump);
+    private static readonly int AttackState = Animator.StringToHash(PlayerAnimator.States.Attack);
+    
+    private float _speed;
     
     private Animator _animator;
     private SpriteRenderer _renderer;
@@ -23,7 +29,7 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        _speed = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) ? _runSpeed : _walkSpeed;
+        _speed = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) ? RunSpeed : WalkSpeed;
         
         float axisValue = Input.GetAxis("Horizontal") * _speed;
         
@@ -57,17 +63,33 @@ public class PlayerInput : MonoBehaviour
     private void Move(float speed)
     {
         _playerMove.Move(speed);
-        _animator.SetFloat("Speed",  Mathf.Abs(speed));
+        _animator.SetFloat(Speed,  Mathf.Abs(speed));
     }
     
     private void Jump()
     {
         _playerMove.Jump();
-        _animator.SetTrigger("Jump");
+        _animator.SetTrigger(JumpState);
     }
     
     private void Attack()
     {
-        _animator.SetTrigger("Attack");
+        _animator.SetTrigger(AttackState);
+    }
+}
+
+
+public static class PlayerAnimator
+{
+    public static class Params
+    {
+        public const string Speed = "Speed";
+    } 
+        
+    public static class States
+    {
+        public const string Idle = nameof(Idle);
+        public const string Attack = nameof(Attack);
+        public const string Jump = nameof(Jump);
     }
 }
