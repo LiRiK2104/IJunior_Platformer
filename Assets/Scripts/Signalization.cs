@@ -38,6 +38,8 @@ public class Signalization : MonoBehaviour
     private void SetOff()
     {
         _isOn = false;
+        StopCoroutine(PlaySignalization());
+        _audioSource.Stop();
     }
 
     private void SetOn()
@@ -73,19 +75,19 @@ public class Signalization : MonoBehaviour
         {
             _audioSource.volume = minVolume;
 
-            while (_audioSource.volume < maxVolume)
-            {
-                _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, maxVolume, Time.deltaTime * speed);
-                yield return null;
-            }
-
-            while (_audioSource.volume > minVolume)
-            {
-                _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, minVolume, Time.deltaTime * speed);   
-                yield return null;
-            }
+            yield return MoveVolumeTowards(maxVolume, speed);
+            yield return MoveVolumeTowards(minVolume, speed);
         }
         
         _audioSource.Stop();
+    }
+
+    private IEnumerator MoveVolumeTowards(int target, float speed)
+    {
+        while (_audioSource.volume != target)
+        {
+            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, target, Time.deltaTime * speed);   
+            yield return null;
+        }
     }
 }
