@@ -23,7 +23,7 @@ public class SignalizationZone : MonoBehaviour
 
     private void TryUpdateSignalization(Collider2D other, bool isDetecting)
     {
-        if (other.TryGetComponent(out PlayerMove player))
+        if (other.GetComponent<PlayerMove>())
         {
             IsDetecting = isDetecting;
             
