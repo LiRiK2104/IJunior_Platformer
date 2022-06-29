@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
 {
+    [SerializeField] private Weapon _weapon;
+    
     private const float WalkSpeed = 2;
     private const float RunSpeed = 4;
     
@@ -57,6 +59,11 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             Attack();
+        }
+
+        if (Input.GetMouseButton(0))
+        {
+            _weapon.Shoot(transform.position);
         }
     }
 
