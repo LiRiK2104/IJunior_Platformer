@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efdd9a8412ae6fc4286692dfb89e7ef9, type: 3}
   m_Name: Wave 1
   m_EditorClassIdentifier: 
-  _enemiesCount: 0
+  _enemiesCount: 10
   _spawnInterval: 1
   _possibleEnemies:
-  - _item: {fileID: 8352169697651113663, guid: e99b5c7c22e04f244b20ad83167aca75, type: 3}
+  - _item: {fileID: 7453408061922512384, guid: e8af515d05e0fdb4cb4f419315a5e088, type: 3}
     _probability: 20
   - _item: {fileID: 8352169697651113663, guid: e99b5c7c22e04f244b20ad83167aca75, type: 3}
     _probability: 80

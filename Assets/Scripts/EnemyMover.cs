@@ -15,11 +15,16 @@ public class EnemyMover : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
+    {
+        Move(FindTarget());
+    }
+
+    private Vector3 FindTarget()
     {
         int findRadius = 50;
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, findRadius);
-
+        
         Vector3 target = transform.position;
         
         foreach (var collider in colliders)
@@ -30,6 +35,11 @@ public class EnemyMover : MonoBehaviour
             }
         }
 
+        return target;
+    }
+
+    private void Move(Vector3 target)
+    {
         if (target != transform.position)
         {
             _rigidbody.velocity = (target - transform.position).normalized * _speed;   
