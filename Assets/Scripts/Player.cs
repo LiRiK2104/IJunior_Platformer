@@ -1,16 +1,25 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(
+    typeof(PlayerMove), 
+    typeof(PlayerMove))]
 public class Player : MonoBehaviour, IHealthOwner
 {
     [SerializeField] private int _maxHealth;
     [SerializeField] private Weapon _weapon;
-    
+
+    private static readonly int TakeDamageState = Animator.StringToHash(PlayerAnimator.States.TakeDamage);
+    private PlayerMove _playerMove;
+    private PlayerInput _playerInput;
     private int _health;
+    
     
     public static event Action Killing;
     public static event Action<Player> TookDamage;
-    
+
+    public PlayerMove PlayerMove => _playerMove;
+    public Weapon Weapon => _weapon;
     public int MaxHealth => _maxHealth;
     public int Health => _health;
 
@@ -18,22 +27,25 @@ public class Player : MonoBehaviour, IHealthOwner
     {
         Init();
     }
-
-    public void Init()
-    {
-        gameObject.SetActive(true);
-        _health = _maxHealth;
-    }
     
     public void TakeDamage(IDamagable damagableObject)
     {
         _health -= damagableObject.GetDamage();
         _health = Math.Max(_health, 0);
 
+        _playerInput.Animator.SetTrigger(TakeDamageState);
         TookDamage?.Invoke(this);
         
         if (_health == 0)
             Die();
+    }
+
+    private void Init()
+    {
+        _playerMove = GetComponent<PlayerMove>();
+        _playerInput = GetComponent<PlayerInput>();
+        gameObject.SetActive(true);
+        _health = _maxHealth;
     }
 
     private void Die()

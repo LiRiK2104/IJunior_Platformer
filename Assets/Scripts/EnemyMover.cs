@@ -1,41 +1,84 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(
+    typeof(Rigidbody2D),
+    typeof(SpriteRenderer),
+    typeof(Enemy))]
 public class EnemyMover : MonoBehaviour
 {
     [SerializeField] private float _speed;
     
+    private SpriteRenderer _spriteRenderer;
     private Rigidbody2D _rigidbody;
-
+    private Enemy _main;
+    
     private void Awake()
     {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _rigidbody = GetComponent<Rigidbody2D>();
+        _main = GetComponent<Enemy>();
     }
 
     void FixedUpdate()
     {
-        int findRadius = 50;
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, findRadius);
-
-        Vector3 target = transform.position;
+        Player target;
+        int radiusForMove = 50;
+        int radiusForAttack = 1;
         
-        foreach (var collider in colliders)
+        if (TryFindTarget(radiusForAttack, out target))
         {
-            if (target == transform.position && collider.TryGetComponent(out Player player))
-            {
-                target = player.transform.position;
-            }
+            _main.Attack(target);
         }
-
-        if (target != transform.position)
+        if (TryFindTarget(radiusForMove, out target))
         {
-            _rigidbody.velocity = (target - transform.position).normalized * _speed;   
+            Move(target.transform.position);
         }
     }
 
+    private bool TryFindTarget(int findRadius, out Player target)
+    {
+        target = FindTarget(findRadius);
+        return target != null;
+    }
+
+    private Player FindTarget(int findRadius)
+    {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, findRadius);
+
+        Player target = null;
+        
+        foreach (var collider in colliders)
+        {
+            if (target == null && collider.TryGetComponent(out Player player))
+            {
+                target = player;
+            }
+        }
+
+        return target;
+    }
+
+    private void Move(Vector3 target)
+    {
+        if (target != transform.position)
+        {
+            _rigidbody.velocity = (target - transform.position).normalized * _speed;
+            Rotate();
+        }
+    }
+
+    private void Rotate()
+    {
+        if (_rigidbody.velocity.x > 0)
+        {
+            _spriteRenderer.flipX = true;
+        }
+        else if (_rigidbody.velocity.x < 0)
+        {
+            _spriteRenderer.flipX = false;
+        }
+    }
+    
     private void OnValidate()
     {
         _speed = Mathf.Max(_speed, 0);

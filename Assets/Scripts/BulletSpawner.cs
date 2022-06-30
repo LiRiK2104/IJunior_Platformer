@@ -1,11 +1,27 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class BulletSpawner : MonoBehaviour
 {
+    public static BulletSpawner Instance { get; private set; }
+
     private List<Bullet> _pool = new List<Bullet>();
-    
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void OnEnable()
     {
         Bullet.Killing += OnKilling;
@@ -28,7 +44,7 @@ public class BulletSpawner : MonoBehaviour
         if (spawnedBullet != null)
             _pool.Remove(spawnedBullet);
         else
-            spawnedBullet = Instantiate(weapon.Bullet, weapon.BulletSpawnPoint.position, Quaternion.identity);
+            spawnedBullet = Instantiate(weapon.Bullet, weapon.BulletSpawnPoint.position, Quaternion.identity, transform);
         
         spawnedBullet.Init(weapon);
 

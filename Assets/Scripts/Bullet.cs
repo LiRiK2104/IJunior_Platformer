@@ -37,9 +37,8 @@ public class Bullet : MonoBehaviour, IDamagable, ILifetimeOwner
         _rigidbody.AddForce(direction * force, ForceMode2D.Impulse);
     }
 
-    private void Die()
+    protected void Die()
     {
-        // TODO: добавить эффект (необязательно)
         Killing?.Invoke(this);
         gameObject.SetActive(false);
     }

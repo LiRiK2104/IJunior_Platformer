@@ -2,12 +2,12 @@ using UnityEngine;
 
 [RequireComponent(
     typeof(SpriteRenderer), 
-    typeof(Animator), 
-    typeof(PlayerMove))]
+    typeof(Animator),
+    typeof(Player))]
 
 public class PlayerInput : MonoBehaviour
 {
-    [SerializeField] private Weapon _weapon;
+    private Player _main;
     
     private const float WalkSpeed = 2;
     private const float RunSpeed = 4;
@@ -15,18 +15,19 @@ public class PlayerInput : MonoBehaviour
     private static readonly int Speed = Animator.StringToHash(PlayerAnimator.Params.Speed);
     private static readonly int JumpState = Animator.StringToHash(PlayerAnimator.States.Jump);
     private static readonly int AttackState = Animator.StringToHash(PlayerAnimator.States.Attack);
-    
+
     private float _speed;
     
     private Animator _animator;
     private SpriteRenderer _renderer;
-    private PlayerMove _playerMove;
+
+    public Animator Animator => _animator;
 
     private void Start()
     {
         _animator = GetComponent<Animator>();
         _renderer = GetComponent<SpriteRenderer>();
-        _playerMove = GetComponent<PlayerMove>();
+        _main = GetComponent<Player>();
     }
 
     void Update()
@@ -63,19 +64,20 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            _weapon.Shoot(transform.position);
+            Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            _main.Weapon.Shoot(target);
         }
     }
 
     private void Move(float speed)
     {
-        _playerMove.Move(speed);
+        _main.PlayerMove.Move(speed);
         _animator.SetFloat(Speed,  Mathf.Abs(speed));
     }
     
     private void Jump()
     {
-        _playerMove.Jump();
+        _main.PlayerMove.Jump();
         _animator.SetTrigger(JumpState);
     }
     
@@ -98,5 +100,6 @@ public static class PlayerAnimator
         public const string Idle = nameof(Idle);
         public const string Attack = nameof(Attack);
         public const string Jump = nameof(Jump);
+        public const string TakeDamage = nameof(TakeDamage);
     }
 }

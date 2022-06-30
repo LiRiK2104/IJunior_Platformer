@@ -9,35 +9,33 @@ public class Weapon : MonoBehaviour
     [SerializeField] private Bullet bullet;
     [SerializeField] private float _bulletLifetime;
     [SerializeField] private Transform _bulletSpawnPoint;
-
-    private BulletSpawner _bulletSpawner;
-    private bool isWaitingInterval = false;
+    
+    private bool _isWaitInterval = false;
     
     public int Damage => _damage;
     public Bullet Bullet => bullet;
     public float BulletLifetime => _bulletLifetime;
     public Transform BulletSpawnPoint => _bulletSpawnPoint;
 
-    private void Awake()
+    public void Shoot(Vector3 target)
     {
-        _bulletSpawner = FindObjectOfType<BulletSpawner>();
-    }
-
-    public void Shoot(Vector3 playerPosition)
-    {
-        if (isWaitingInterval == false)
+        if (_isWaitInterval == false)
         {
-            Vector2 direction = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerPosition).normalized;
-            var bullet = _bulletSpawner.Spawn(this);
-            bullet.Push(direction);
+            var bullet = BulletSpawner.Instance.Spawn(this);
+            bullet.Push(GetShootDirection(target));
             StartCoroutine(WaitInterval());
         }
     }
 
+    private Vector3 GetShootDirection(Vector3 target)
+    {
+        return (target - transform.position).normalized;
+    }
+
     private IEnumerator WaitInterval()
     {
-        isWaitingInterval = true;
+        _isWaitInterval = true;
         yield return new WaitForSeconds(_shootingInterval);
-        isWaitingInterval = false;
+        _isWaitInterval = false;
     }
 }
