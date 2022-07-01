@@ -16,7 +16,6 @@ public class PlayerHealthBar : Bar
     
     private void OnValueChanged(Player player)
     {
-        Slider.enabled = player.Health < player.MaxHealth;
         OnValueChanged(player.Health, player.MaxHealth);
     }
 }

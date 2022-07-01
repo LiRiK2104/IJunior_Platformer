@@ -7,7 +7,6 @@ public class EnemyHealthBar : Bar
     private void OnEnable()
     {
         _enemy.TookDamage += OnValueChanged;
-        OnValueChanged(_enemy);
     }
 
     private void OnDisable()
@@ -15,9 +14,15 @@ public class EnemyHealthBar : Bar
         _enemy.TookDamage -= OnValueChanged;
     }
 
+    protected override void Start()
+    {
+        base.Start();
+        OnValueChanged(_enemy);
+    }
+
     private void OnValueChanged(Enemy enemy)
     {
-        Slider.enabled = enemy.Health < enemy.MaxHealth;
+        CanvasGroup.alpha = enemy.Health < enemy.MaxHealth? MaxAlpha : MinAlpha;
         OnValueChanged(enemy.Health, enemy.MaxHealth);
     }
 }
