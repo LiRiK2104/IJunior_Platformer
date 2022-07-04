@@ -64,7 +64,7 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             _main.Weapon.Shoot(target);
         }
     }

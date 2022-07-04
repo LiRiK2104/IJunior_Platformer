@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2077713325680862064
 RectTransform:
   m_ObjectHideFlags: 0
@@ -207,6 +207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weapon: {fileID: 6012591678478950569}
   _maxHealth: 100
+  _reward: 1
 --- !u!50 &7074846755282136567
 Rigidbody2D:
   serializedVersion: 4

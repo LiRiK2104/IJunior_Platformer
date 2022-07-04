@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    [SerializeField] private int _id;
     [SerializeField] private int _damage;
     [SerializeField] private float _shootingInterval;
     [SerializeField] private Bullet bullet;
@@ -12,12 +13,13 @@ public class Weapon : MonoBehaviour
     
     private bool _isWaitInterval = false;
     
+    public int Id => _id;
     public int Damage => _damage;
     public Bullet Bullet => bullet;
     public float BulletLifetime => _bulletLifetime;
     public Transform BulletSpawnPoint => _bulletSpawnPoint;
 
-    public void Shoot(Vector3 target)
+    public void Shoot(Vector2 target)
     {
         if (_isWaitInterval == false)
         {
@@ -27,9 +29,9 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    private Vector3 GetShootDirection(Vector3 target)
+    private Vector2 GetShootDirection(Vector2 target)
     {
-        return (target - transform.position).normalized;
+        return (target - (Vector2) transform.position).normalized;
     }
 
     private IEnumerator WaitInterval()

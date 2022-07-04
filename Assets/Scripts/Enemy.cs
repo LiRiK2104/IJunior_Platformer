@@ -7,6 +7,7 @@ public abstract class Enemy : MonoBehaviour, IHealthOwner
 {
     [SerializeField] private Weapon _weapon;
     [SerializeField] private int _maxHealth;
+    [SerializeField] private int _reward;
     
     private bool _isAlive;
     private int _health;
@@ -20,7 +21,8 @@ public abstract class Enemy : MonoBehaviour, IHealthOwner
     
     public int MaxHealth => _maxHealth;
     public int Health => _health;
-
+    public int Reward => _reward;
+    
     public void Init()
     {
         if (_animator == null)
@@ -68,6 +70,7 @@ public abstract class Enemy : MonoBehaviour, IHealthOwner
     private void OnValidate()
     {
         _maxHealth = Math.Max(_maxHealth, 0);
+        _reward = Math.Max(_reward, 0);
     }
 }
 

@@ -1,4 +1,5 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 [RequireComponent(
@@ -40,12 +41,24 @@ public class Player : MonoBehaviour, IHealthOwner
             Die();
     }
 
+    public void SetWeapon(WeaponStoreCell cell)
+    {
+        Destroy(_weapon.gameObject);
+        SetWeapon(cell.Data.Weaapon);
+    }
+    
+    private void SetWeapon(Weapon template)
+    {
+        _weapon = Instantiate(template, transform.position, quaternion.identity, transform);
+    }
+
     private void Init()
     {
         _playerMove = GetComponent<PlayerMove>();
         _playerInput = GetComponent<PlayerInput>();
         gameObject.SetActive(true);
         _health = _maxHealth;
+        SetWeapon(_weapon);
     }
 
     private void Die()

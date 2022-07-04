@@ -6,11 +6,11 @@ using UnityEngine;
 public class Wave : ScriptableObject
 {
     [SerializeField] private int _enemiesCount;
-    [SerializeField] private int _spawnInterval;
+    [SerializeField] private float _spawnInterval;
     [SerializeField] private List<ProbabilityCell<Enemy>> _possibleEnemies = new List<ProbabilityCell<Enemy>>();
 
     public int EnemiesCount => _enemiesCount;
-    public int SpawnInterval => _spawnInterval;
+    public float SpawnInterval => _spawnInterval;
     
     private Roulette _roulette;
 
