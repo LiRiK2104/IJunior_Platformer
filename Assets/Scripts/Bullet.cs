@@ -4,31 +4,28 @@ using UnityEngine;
 using System.Linq;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Bullet : MonoBehaviour, IDamagable, ILifetimeOwner
+public class Bullet : MonoBehaviour, IDamager, ILifetimeOwner
 {
     private Rigidbody2D _rigidbody;
     private int _damage;
     
     public static event Action<Bullet> Killing;
     
-    public float AllLifetime { get; private set; }
+    public float MaxLifetime { get; private set; }
     public float Lifetime { get; private set; }
 
-    public int GetDamage()
-    {
-        return _damage;
-    }
-    
+    public int Damage => _damage;
+
     public void Init(Weapon weapon)
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _damage = weapon.Damage;
-        AllLifetime = weapon.BulletLifetime;
+        MaxLifetime = weapon.BulletLifetime;
         Lifetime = 0;
         
         gameObject.transform.position = weapon.BulletSpawnPoint.position;
         gameObject.SetActive(true);
-        StartCoroutine(CountLifetime());
+        Invoke(nameof(Die), MaxLifetime);
     }
 
     public void Push(Vector3 direction)
@@ -45,28 +42,16 @@ public class Bullet : MonoBehaviour, IDamagable, ILifetimeOwner
     
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.GetComponents<MonoBehaviour>()
-                .FirstOrDefault(component => component is IHealthOwner) is IHealthOwner healthOwner)
+        if (other.gameObject.TryGetComponent(out IHealthOwner healthOwner))
         {
             healthOwner.TakeDamage(this);
             Die();
         }
     }
-
-    private IEnumerator CountLifetime()
-    {
-        while (Lifetime < AllLifetime)
-        {
-            Lifetime += Time.deltaTime;
-            yield return null;
-        }
-
-        Die();
-    }
 }
 
 public interface ILifetimeOwner
 {
-    public float AllLifetime { get; }
+    public float MaxLifetime { get; }
     public float Lifetime { get; }
 }

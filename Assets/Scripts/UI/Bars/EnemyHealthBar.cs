@@ -7,6 +7,7 @@ public class EnemyHealthBar : Bar
     private void OnEnable()
     {
         _enemy.TookDamage += OnValueChanged;
+        OnValueChanged(_enemy);
     }
 
     private void OnDisable()

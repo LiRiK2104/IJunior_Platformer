@@ -68,11 +68,17 @@ public class EnemySpawner : MonoBehaviour
     private void Spawn<T>(T template) where T : Enemy
     {
         var spawnedEnemy = _pool.FirstOrDefault(enemy => enemy is T);
+        Vector3 spawnPoint = GetRandomSpawnPoint().position;
 
         if (spawnedEnemy != null)
+        {
             _pool.Remove(spawnedEnemy);
+            spawnedEnemy.transform.position = spawnPoint;
+        }
         else
-            spawnedEnemy = Instantiate(template, GetRandomSpawnPoint().position, quaternion.identity);
+        {
+            spawnedEnemy = Instantiate(template, spawnPoint, quaternion.identity);
+        }
         
         spawnedEnemy.Init();
     }

@@ -28,9 +28,9 @@ public abstract class Enemy : MonoBehaviour, IHealthOwner
         if (_animator == null)
             _animator = GetComponent<Animator>();
         
-        gameObject.SetActive(true);
         _health = _maxHealth;
         _isAlive = true;
+        gameObject.SetActive(true);
     }
     
     public void Attack(Player target)
@@ -39,14 +39,14 @@ public abstract class Enemy : MonoBehaviour, IHealthOwner
         _weapon.Shoot(target.transform.position);
     }
 
-    public void TakeDamage(IDamagable damagableObject)
+    public void TakeDamage(IDamager damagerObject)
     {
         if (_isAlive == false)
             return;
         
         _animator.SetTrigger(DamageState);
         
-        _health -= damagableObject.GetDamage();
+        _health -= damagerObject.Damage;
         _health = Math.Max(_health, 0);
 
         TookDamage?.Invoke(this);

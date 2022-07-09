@@ -29,9 +29,9 @@ public class Player : MonoBehaviour, IHealthOwner
         Init();
     }
     
-    public void TakeDamage(IDamagable damagableObject)
+    public void TakeDamage(IDamager damagerObject)
     {
-        _health -= damagableObject.GetDamage();
+        _health -= damagerObject.Damage;
         _health = Math.Max(_health, 0);
 
         _playerInput.Animator.SetTrigger(TakeDamageState);
@@ -73,14 +73,14 @@ public class Player : MonoBehaviour, IHealthOwner
     }
 }
 
-public interface IDamagable
+public interface IDamager
 {
-    public int GetDamage();
+    public int Damage { get; }
 }
 
 public interface IHealthOwner
 {
     public int Health { get; }
 
-    public void TakeDamage(IDamagable damagableObject);
+    public void TakeDamage(IDamager damagerObject);
 }

@@ -11,7 +11,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] private float _bulletLifetime;
     [SerializeField] private Transform _bulletSpawnPoint;
     
-    private bool _isWaitInterval = false;
+    private bool _canShoot = false;
     
     public int Id => _id;
     public int Damage => _damage;
@@ -21,7 +21,7 @@ public class Weapon : MonoBehaviour
 
     public void Shoot(Vector2 target)
     {
-        if (_isWaitInterval == false)
+        if (_canShoot == false)
         {
             var bullet = BulletSpawner.Instance.Spawn(this);
             bullet.Push(GetShootDirection(target));
@@ -36,8 +36,8 @@ public class Weapon : MonoBehaviour
 
     private IEnumerator WaitInterval()
     {
-        _isWaitInterval = true;
+        _canShoot = true;
         yield return new WaitForSeconds(_shootingInterval);
-        _isWaitInterval = false;
+        _canShoot = false;
     }
 }
